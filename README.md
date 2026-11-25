@@ -4,6 +4,8 @@ Throwaway PoC: render any URL through a local rewriting proxy, so the page looks
 
 Runs as a Cloudflare Worker with R2 (cache) and two Durable Object classes (live-mode cookie jars, extension storage). Locally `wrangler dev` simulates all of it, so you need no account.
 
+![Map view: an old site in A and its redesign in B. Three numbered notes, each in its own colour, connect marks across the panes: a quote, a hand-drawn circle around a table, outlined elements. The notes drawer on the right explains each mapping.](docs/screenshots/map.png)
+
 ```bash
 npm install
 npm run dev             # then open http://px.localhost:8787
@@ -12,6 +14,7 @@ npm run test:features   # 32 browser checks: WebSockets, navigations, SSE, redir
 npm run test:comments   # 33 browser checks of the comments extension against a local fixture page (mutation-checked)
 npm run test:map        # 28 browser checks of the map view against two local fixture sites (mutation-checked)
 npm run compare         # original vs proxied screenshots + leak count, snapshot and live; writes out/report.html
+npm run screenshots     # regenerates the README images from two local demo pages (scripts/demo-sites.mjs)
 ```
 
 Open **http://px.localhost:8787**. `*.localhost` resolves to loopback in Chrome, and `px.localhost` is a registrable domain, so the toolbar and every proxy host are one site, as they would be under `preview.example.com` in production. Type a URL and tick **live** if you need cookies (logins). The status line reads the page's own Resource Timing to show cache hits, fetches, what the service worker caught and what leaked. "Cache" lists cached bytes per origin.
@@ -126,6 +129,8 @@ URL rewriting keeps each string's shape: absolute stays absolute, protocol-relat
 
 In the toolbar, **✚ Comment** puts the page in pick mode: click any element, or drag to select text, then write the comment in the drawer on the right. Pins are numbered per page. Clicking a pin opens its comment; clicking a comment scrolls to its pin and flashes it. The drawer filters Open / Resolved / All and lists **This page** or the **Whole site**; a comment on another page opens that page and selects it there. Esc cancels pick mode.
 
+![Comments: numbered pins on a button, a photo and a highlighted word in a proxied page, and the comments drawer on the right with the selected comment.](docs/screenshots/comments.png)
+
 ```
 src/extensions/index.ts                   registry: one line per extension
 src/extensions/comments/page.client.js    runs inside the proxied page: pins, highlights
@@ -180,6 +185,8 @@ A test race also looked like a bug: Escape sent right after clicking "✚ Commen
 ## Map view: relating two pages
 
 For migrating content into a new shape: put the current page in **A** and the redesign in **B**, mark something in A and something in B, and write how they relate, or what to do.
+
+![A note being written: a newsletter box marked in A and a circle drawn around B's footer, joined by a line, with the draft's mark chips and text in the drawer.](docs/screenshots/map-draft.png)
 
 Open **http://px.localhost:8787/map** (or **⫽ Map** in the toolbar, which carries over the current page as A).
 - **▢ Mark** picks elements or text, as comments does. **✎ Draw** draws freehand; strokes made in one go join one drawing. Both tools work in either pane and stay on until Esc. Every mark joins the draft note, from either pane, and shows as a chip that can be removed.

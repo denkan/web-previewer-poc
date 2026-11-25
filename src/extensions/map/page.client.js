@@ -177,8 +177,12 @@ pxExtension('map', (px) => {
 	setInterval(() => (notes.length || draft.marks.length) && schedule(), 1000);
 
 	// --- tools ----------------------------------------------------------------------------------------------------
-	function labelOf(anchor) {
-		return anchor.kind === 'text' ? anchor.quote.exact.slice(0, 120) : anchor.text;
+	/** Chip label: the quote, or the element's visible text (innerText keeps line breaks as spaces; the anchor's own
+	 * text stays textContent-based, so matching is unaffected). */
+	function labelOf(t) {
+		if (t.anchor.kind === 'text') return t.anchor.quote.exact.slice(0, 120);
+		const shown = t.el ? String(t.el.innerText || '').replace(/\s+/g, ' ').trim() : '';
+		return shown.slice(0, 120) || t.anchor.text;
 	}
 	function setTool(kind, c) {
 		drawing = null;
@@ -187,7 +191,7 @@ pxExtension('map', (px) => {
 				sticky: true,
 				hint: 'Mark: click an element or select text · Esc to stop',
 				onPick: (t) => {
-					const mark = { id: rid(), kind: t.anchor.kind, anchor: t.anchor, tag: t.anchor.tag, label: labelOf(t.anchor) };
+					const mark = { id: rid(), kind: t.anchor.kind, anchor: t.anchor, tag: t.anchor.tag, label: labelOf(t) };
 					targets.set(mark.id, t);
 					px.send('mark', mark);
 				},

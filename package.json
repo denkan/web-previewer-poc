@@ -11,7 +11,8 @@
     "test:features": "node scripts/test-features.mjs",
     "test:comments": "node scripts/test-comments.mjs",
     "test:map": "node scripts/test-map.mjs",
-    "compare": "node scripts/compare.mjs"
+    "compare": "node scripts/compare.mjs",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "devDependencies": {
     "pixelmatch": "^7.1.0",
