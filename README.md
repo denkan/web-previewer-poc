@@ -272,3 +272,7 @@ npm run deploy
 ```
 
 Set `SUBDOMAIN_ROOT` to e.g. `preview.example.com` and add a wildcard DNS record plus the route `*.preview.example.com/*`. You need certificates for `*.preview…`, `*.http.preview…`, `*.live.preview…` and `*.http.live.preview…`. `workers.dev` doesn't do wildcard subdomains. The Cache API is not used because it doesn't work on `workers.dev`; R2 works everywhere.
+
+## License
+
+[MIT](LICENSE)
