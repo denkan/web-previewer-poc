@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "web-previewer-poc",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-11-01",
+  // One R2 bucket holds the response cache (c/...) and the dictionary fallback for unencodable origins (o/{hash}).
+  "r2_buckets": [{ "binding": "STORE", "bucket_name": "web-previewer-poc" }],
+  // Live mode: one Durable Object per preview session holds its (encrypted) cookie jar.
+  // Extensions: one ExtStoreDO per (extension, original site) holds that extension's items (e.g. comments).
+  "durable_objects": {
+    "bindings": [
+      { "name": "JARS", "class_name": "CookieJarDO" },
+      { "name": "EXT_STORE", "class_name": "ExtStoreDO" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["CookieJarDO"] },
+    { "tag": "v2", "new_sqlite_classes": ["ExtStoreDO"] }
+  ],
+  // The client runtime, service worker, origin codec and extension code are plain JS files served as text.
+  "rules": [{ "type": "Text", "globs": ["**/*.client.js"], "fallthrough": false }],
+  "vars": {
+    // Proxy hosts: {label}[.http][.live].{SUBDOMAIN_ROOT}. Locally px.localhost: Chrome resolves *.localhost to loopback,
+    // and px.localhost is a registrable domain, so the toolbar + every proxy host are one site and can share the
+    // Domain=px.localhost session cookie. In production e.g. "preview.example.com" (wildcard DNS + route + certs).
+    "SUBDOMAIN_ROOT": "px.localhost:8787",
+    "JAR_IDLE_TTL_SECONDS": "86400"
+  },
+  // Optional secret JAR_MASTER_KEY (base64, 32 bytes): `wrangler secret put JAR_MASTER_KEY`, locally in .dev.vars.
+  "observability": { "enabled": true }
+}

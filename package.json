@@ -1,0 +1,26 @@
+{
+  "name": "web-previewer-poc",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types",
+    "check": "tsc --noEmit && node scripts/test-codec.mjs",
+    "test:features": "node scripts/test-features.mjs",
+    "test:comments": "node scripts/test-comments.mjs",
+    "test:map": "node scripts/test-map.mjs",
+    "compare": "node scripts/compare.mjs"
+  },
+  "devDependencies": {
+    "pixelmatch": "^7.1.0",
+    "playwright": "1.63.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.81.1"
+  },
+  "dependencies": {
+    "tldts": "^7.5.5",
+    "tough-cookie": "^6.1.0"
+  }
+}
